@@ -1,1 +1,1 @@
-# Implementation of Business Flow Orchestration with Spring Integration Framework
+# Implementation of Application Flow Orchestration with Spring Integration Framework
