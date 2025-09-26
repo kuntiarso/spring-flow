@@ -1,0 +1,46 @@
+services:
+  springflow-mysql:
+    image: mysql:8.0
+    container_name: springflow-mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - springflow-mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=flowuser
+      - MYSQL_PASSWORD=${MYSQL_USER_PASSWORD}
+      - MYSQL_DATABASE=springflow
+    restart: unless-stopped
+  springflow-redis:
+    image: redis:8.2
+    container_name: springflow-redis
+    command: >
+      sh -c "exec redis-server --requirepass $$REDIS_PASSWORD"
+    ports:
+      - 6379:6379
+    volumes:
+      - springflow-redis-data:/data
+    environment:
+      - REDIS_PASSWORD=${REDIS_USER_PASSWORD}
+    restart: unless-stopped
+  springflow-rabbitmq:
+    image: rabbitmq:4.1-management
+    container_name: springflow-rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - springflow-rabbitmq-data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=flowuser
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_USER_PASSWORD}
+    restart: unless-stopped
+
+volumes:
+  springflow-mysql-data:
+    name: springflow-mysql-data
+  springflow-redis-data:
+    name: springflow-redis-data
+  springflow-rabbitmq-data:
+    name: springflow-rabbitmq-data
