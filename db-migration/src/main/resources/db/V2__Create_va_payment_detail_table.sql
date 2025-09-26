@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS `va_payment_detail` (
+    `payment_id` BIGINT PRIMARY KEY,
+    `request_id` VARCHAR(14) NOT NULL,
+    `partner_id` VARCHAR(8) NOT NULL,
+    `inquiry_id` VARCHAR(30) DEFAULT NULL,
+    `customer_no` VARCHAR(20) NOT NULL,
+    `va_no` VARCHAR(20) NOT NULL,
+    `va_name` VARCHAR(255) NOT NULL,
+    `billed_amount_value` DECIMAL(19, 2) NOT NULL,
+    `billed_amount_currency` VARCHAR(3) NOT NULL,
+    `paid_amount_value` DECIMAL(19, 2) DEFAULT NULL,
+    `paid_amount_currency` VARCHAR(3) DEFAULT NULL,
+    `channel` VARCHAR(30) NOT NULL,
+    `how_to_pay_page` VARCHAR(255) DEFAULT NULL,
+    `how_to_pay_api` VARCHAR(255) DEFAULT NULL,
+    `conf_reusable` BOOLEAN DEFAULT FALSE,
+    `conf_min_amount` DECIMAL(19, 2) DEFAULT NULL,
+    `conf_max_amount` DECIMAL(19, 2) DEFAULT NULL,
+    `transaction_type` CHAR(1) NOT NULL,
+    `expired_at` TIMESTAMP(6) DEFAULT NULL,
+    `status` VARCHAR(16) DEFAULT 'INITIATED',
+    `created_at` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP (6),
+    `created_by` VARCHAR(100) NOT NULL,
+    `updated_at` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    `updated_by` VARCHAR(100) NOT NULL,
+    `deleted` BOOLEAN DEFAULT FALSE,
+    `deleted_at` TIMESTAMP(6) DEFAULT NULL,
+    `deleted_by` VARCHAR(100) DEFAULT NULL,
+    `version` BIGINT DEFAULT 0,
+    CONSTRAINT `idx_va_req_id` UNIQUE (`request_id`),
+    CONSTRAINT `fk_va_payment` FOREIGN KEY (`payment_id`) REFERENCES `payment`(`id`) ON DELETE CASCADE
+);
+
+CREATE INDEX `idx_va_inq_id` ON `va_payment_detail`(`inquiry_id`);
+CREATE INDEX `idx_va_va_no` ON `va_payment_detail`(`va_no`);
