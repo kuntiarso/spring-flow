@@ -18,7 +18,7 @@ public class StatusApi {
 
     public DokuStatusResponse checkPaymentStatus(MultiValueMap<String, String> header, DokuStatusRequest request) {
         return dokuRestClient.post()
-                .uri(dokuConfig.getApi().getEndpoint().get("va-status"))
+                .uri(dokuConfig.api().endpoint().get("va-status"))
                 .headers(httpHeaders -> httpHeaders.putAll(header))
                 .body(request)
                 .retrieve()

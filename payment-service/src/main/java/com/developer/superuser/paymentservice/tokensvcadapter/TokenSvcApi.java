@@ -21,7 +21,7 @@ public class TokenSvcApi {
     public TokenResponse getToken(TokenRequest request) {
         return apiHelper.execute(() ->
                 tokenSvcRestClient.post()
-                        .uri(tokenSvcConfig.getEndpoint().get("get-token"))
+                        .uri(tokenSvcConfig.endpoint().get("get-token"))
                         .body(request)
                         .retrieve()
                         .body(new ParameterizedTypeReference<>() {

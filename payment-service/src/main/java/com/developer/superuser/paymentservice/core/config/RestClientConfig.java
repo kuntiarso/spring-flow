@@ -2,7 +2,6 @@ package com.developer.superuser.paymentservice.core.config;
 
 import com.developer.superuser.paymentservice.core.property.DokuConfigProperties;
 import com.developer.superuser.paymentservice.core.property.TokenSvcConfigProperties;
-import com.developer.superuser.paymentservice.core.property.VaSvcConfigProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -19,17 +18,12 @@ import java.nio.charset.StandardCharsets;
 public class RestClientConfig {
     @Bean
     public RestClient dokuRestClient(ObjectMapper mapper, DokuConfigProperties dokuConfig) {
-        return buildRestClient(mapper, dokuConfig.getApi().getBaseUrl(), "DokuRestClient");
+        return buildRestClient(mapper, dokuConfig.api().baseUrl(), "DokuRestClient");
     }
 
     @Bean
     public RestClient tokenSvcRestClient(ObjectMapper mapper, TokenSvcConfigProperties tokenSvcConfig) {
-        return buildRestClient(mapper, tokenSvcConfig.getBaseUrl(), "TokenSvcRestClient");
-    }
-
-    @Bean
-    public RestClient vaSvcRestClient(ObjectMapper mapper, VaSvcConfigProperties vaSvcConfig) {
-        return buildRestClient(mapper, vaSvcConfig.getBaseUrl(), "VaSvcRestClient");
+        return buildRestClient(mapper, tokenSvcConfig.baseUrl(), "TokenSvcRestClient");
     }
 
     private RestClient buildRestClient(ObjectMapper mapper, String baseUrl, String beanName) {

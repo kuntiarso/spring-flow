@@ -13,7 +13,7 @@ public class StatusMapper {
 
     public Status mapCore(String requestId, StatusRequest request) {
         return Status.builder()
-                .setClientId(dokuConfig.getMerchant().getClientId())
+                .setClientId(dokuConfig.merchant().clientId())
                 .setRequestId(requestId)
                 .setPartnerId(request.getPartnerId())
                 .setCustomerNo(request.getCustomerNo())
@@ -23,7 +23,7 @@ public class StatusMapper {
 
     public Status mapCore(String requestId, VaResponse response) {
         return Status.builder()
-                .setClientId(dokuConfig.getMerchant().getClientId())
+                .setClientId(dokuConfig.merchant().clientId())
                 .setRequestId(requestId)
                 .setPartnerId(response.getPartnerId())
                 .setCustomerNo(response.getCustomerNo())

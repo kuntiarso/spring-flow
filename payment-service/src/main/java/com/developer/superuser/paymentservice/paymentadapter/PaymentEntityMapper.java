@@ -1,5 +1,6 @@
 package com.developer.superuser.paymentservice.paymentadapter;
 
+import com.developer.superuser.paymentservice.core.enumeration.PaymentStatus;
 import com.developer.superuser.paymentservice.payment.Payment;
 import com.developer.superuser.shared.embedding.Amount;
 import com.developer.superuser.shared.enumeration.Currency;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PaymentEntityMapper {
-    public PaymentEntity mapInsert(Payment payment) {
+    public PaymentEntity mapEntity(Payment payment) {
         return PaymentEntity.builder()
                 .setOrderId(Long.parseLong(payment.getOrderId()))
                 .setUserId(Long.parseLong(payment.getUserId()))
@@ -19,6 +20,7 @@ public class PaymentEntityMapper {
                         .setValue(payment.getAmount().getValue())
                         .setCurrency(Currency.valueOf(payment.getAmount().getCurrency()))
                         .build())
+                .setStatus(payment.getStatus())
                 .build();
     }
 

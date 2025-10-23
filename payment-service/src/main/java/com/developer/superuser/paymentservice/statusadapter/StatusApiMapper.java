@@ -33,7 +33,7 @@ public class StatusApiMapper {
     public Sign mapSign(String token, DokuStatusRequest request) {
         return Sign.builder()
                 .setHttpMethod(HttpMethod.POST.name())
-                .setEndpoint(dokuConfig.getApi().getEndpoint().get("va-status"))
+                .setEndpoint(dokuConfig.api().endpoint().get("va-status"))
                 .setToken(token)
                 .setDigest(digest.generate(mapper.writeValueAsString(request)))
                 .setTimestamp(Instant.now())

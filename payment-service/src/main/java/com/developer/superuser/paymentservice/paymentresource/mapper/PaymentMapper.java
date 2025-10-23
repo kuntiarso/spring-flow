@@ -5,10 +5,12 @@ import com.developer.superuser.paymentservice.core.enumeration.PaymentStatus;
 import com.developer.superuser.paymentservice.core.utility.Checks;
 import com.developer.superuser.paymentservice.payment.Payment;
 import com.developer.superuser.paymentservice.status.Status;
-import com.developer.superuser.shared.openapi.contract.PaymentRequest;
-import com.developer.superuser.shared.openapi.contract.StatusType;
+import com.developer.superuser.shared.dto.springflow.PaymentCreateRequest;
+import com.developer.superuser.shared.dto.springflow.PaymentCreateResponse;
+import com.developer.superuser.shared.dto.springflow.PaymentUpdateRequest;
+import com.developer.superuser.shared.dto.springflow.PaymentUpdateResponse;
+import com.developer.superuser.shared.openapi.contract.ErrorData;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -17,14 +19,40 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class PaymentMapper {
-    public Payment mapCore(String requestId, PaymentRequest request) {
+    public Payment mapCore(String requestId, PaymentCreateRequest request) {
         return Payment.builder()
-                .setOrderId(request.getOrderId())
-                .setUserId(request.getUserId())
                 .setRequestId(requestId)
-                .setType(request.getPaymentType())
+                .setOrderId(request.orderId())
+                .setUserId(request.userId())
+                .setType(request.paymentType())
                 .setGateway(PaymentServiceConstant.PAYMENT_GATEWAY_DOKU)
-                .setAmount(request.getBilledAmount())
+                .setAmount(request.amount())
+                .setStatus(PaymentStatus.INITIATED)
+                .build();
+    }
+
+    public PaymentCreateResponse mapPaymentCreateResponse(Payment payment) {
+        return PaymentCreateResponse.builder()
+                .withPaymentId(payment.getId())
+                .withStatus(payment.getStatus().getLabel())
+                .build();
+    }
+
+    public Payment mapCore(PaymentUpdateRequest request) {
+        ErrorData error = Objects.nonNull(request.error()) ? request.error() : new ErrorData();
+        return Payment.builder()
+                .setId(request.paymentId())
+                .setStatus(PaymentStatus.valueOf(request.status()))
+                .setErrorCode(error.getCode())
+                .setErrorMessage(error.getMessage())
+                .setPaidAt(request.paidAt())
+                .build();
+    }
+
+    public PaymentUpdateResponse mapPaymentUpdateResponse(Payment payment) {
+        return PaymentUpdateResponse.builder()
+                .withPaymentId(payment.getId())
+                .withStatus(payment.getStatus().getLabel())
                 .build();
     }
 

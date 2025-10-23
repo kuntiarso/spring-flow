@@ -19,9 +19,6 @@ import com.developer.superuser.paymentservice.statusresource.StatusMapper;
 import com.developer.superuser.paymentservice.tokensvc.TokenSvcApiService;
 import com.developer.superuser.paymentservice.tokensvcadapter.TokenSvcApi;
 import com.developer.superuser.paymentservice.tokensvcadapter.TokenSvcApiServiceAdapter;
-import com.developer.superuser.paymentservice.vasvc.VaSvcApiService;
-import com.developer.superuser.paymentservice.vasvcadapter.VaSvcApi;
-import com.developer.superuser.paymentservice.vasvcadapter.VaSvcApiServiceAdapter;
 import com.developer.superuser.shared.project.springodt.sign.Symmetric;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -33,11 +30,6 @@ public class AdapterConfig {
     @Bean
     public TokenSvcApiService tokenSvcApiService(TokenSvcApi tokenSvcApi) {
         return new TokenSvcApiServiceAdapter(tokenSvcApi);
-    }
-
-    @Bean
-    public VaSvcApiService vaSvcApiService(TokenSvcMapper tokenSvcMapper, TokenSvcApiService tokenSvcApiService, VaSvcApi vaSvcApi) {
-        return new VaSvcApiServiceAdapter(tokenSvcMapper, tokenSvcApiService, vaSvcApi);
     }
 
     @Bean

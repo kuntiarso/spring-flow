@@ -15,9 +15,9 @@ public class PaymentPersistenceServiceAdapter implements PaymentPersistenceServi
     @Override
     @Transactional
     public Payment create(Payment payment) {
-        log.debug("Persisting payment detail");
-        PaymentEntity savedPayment = paymentRepository.save(paymentEntityMapper.mapInsert(payment));
-        log.info("Successfully saved payment detail --- {}", savedPayment);
+        log.debug("Persisting payment");
+        PaymentEntity savedPayment = paymentRepository.save(paymentEntityMapper.mapEntity(payment));
+        log.info("Successfully inserted payment --- {}", savedPayment);
         return paymentEntityMapper.mapCore(savedPayment);
     }
 

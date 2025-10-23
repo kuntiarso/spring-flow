@@ -14,7 +14,7 @@ public class TokenSvcMapper {
 
     public TokenRequest mapRequest() {
         return TokenRequest.builder()
-                .setClientId(dokuConfig.getMerchant().getClientId())
+                .setClientId(dokuConfig.merchant().clientId())
                 .setTokenType(TokenType.B2B)
                 .setGrantType(GrantType.CLIENT_CREDENTIALS)
                 .build();
