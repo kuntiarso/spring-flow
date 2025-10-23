@@ -1,28 +1,44 @@
 package com.developer.superuser.virtualaccountservice.vapaymentresource;
 
+import com.developer.superuser.shared.dto.springflow.VaCreateRequest;
+import com.developer.superuser.shared.dto.springflow.VaCreateResponse;
 import com.developer.superuser.shared.openapi.contract.StatusResponse;
-import com.developer.superuser.shared.openapi.contract.VaRequest;
-import com.developer.superuser.shared.openapi.contract.VaResponse;
 import com.developer.superuser.virtualaccountservice.core.enumeration.PaymentStatus;
+import com.developer.superuser.virtualaccountservice.core.property.DokuConfigProperties;
 import com.developer.superuser.virtualaccountservice.vapayment.VaDetail;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class VaMapper {
-    public VaDetail mapCore(VaRequest request) {
+    private final DokuConfigProperties dokuConfig;
+
+    public VaDetail mapCore(String requestId, VaCreateRequest request) {
         return VaDetail.builder()
-                .setClientId(request.getClientId())
-                .setRequestId(request.getRequestId())
-                .setToken(request.getToken())
-                .setTokenScheme(request.getTokenScheme())
-                .setPaymentId(request.getPaymentId())
-                .setPartnerId(request.getPartnerId())
-                .setCustomerNo(request.getCustomerNo())
-                .setVaNo(request.getVaNo())
-                .setVaName(request.getVaName())
-                .setBilledAmount(request.getBilledAmount())
-                .setTransactionType(request.getTransactionType())
-                .setAdditional(request.getAdditional())
+                .setRequestId(requestId)
+                .setClientId(dokuConfig.merchant().clientId())
+                .setTokenScheme(request.tokenScheme())
+                .setToken(request.token())
+                .setPaymentId(request.paymentId())
+                .setPartnerId((request.partnerId()))
+                .setCustomerNo(request.customerNo())
+                .setVaNo(request.vaNo())
+                .setVaName(request.vaName())
+                .setBilledAmount(request.billedAmount())
+                .setTransactionType(request.transactionType())
+                .setAdditional(request.additional())
+                .build();
+    }
+
+    public VaCreateResponse mapResponse(VaDetail va) {
+        return VaCreateResponse.builder()
+                .withPaymentId(va.getPaymentId())
+                .withCustomerNo(va.getCustomerNo())
+                .withVaNo(va.getVaNo())
+                .withBilledAmount(va.getBilledAmount())
+                .withAdditional(va.getAdditional())
+                .withExpiredAt(va.getExpiredAt())
                 .build();
     }
 
@@ -53,18 +69,6 @@ public class VaMapper {
         return VaDetail.builder()
                 .setPaymentId(response.getAdditional().getPaymentId())
                 .setStatus(PaymentStatus.FAILED)
-                .build();
-    }
-
-    public VaResponse mapResponse(VaDetail va) {
-        return VaResponse.builder()
-                .setPaymentId(va.getPaymentId())
-                .setPartnerId(va.getPartnerId())
-                .setCustomerNo(va.getCustomerNo())
-                .setVaNo(va.getVaNo())
-                .setBilledAmount(va.getBilledAmount())
-                .setAdditional(va.getAdditional())
-                .setExpiredDate(va.getExpiredAt())
                 .build();
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class GlobalConfig {
     @Bean
     public Symmetric symmetricSign(DokuConfigProperties dokuConfig) {
-        return new Symmetric(VirtualAccountServiceConstant.ALGORITHM_HMAC_SHA512, dokuConfig.getApi().getKey());
+        return new Symmetric(VirtualAccountServiceConstant.ALGORITHM_HMAC_SHA512, dokuConfig.api().key());
     }
 
     @Bean

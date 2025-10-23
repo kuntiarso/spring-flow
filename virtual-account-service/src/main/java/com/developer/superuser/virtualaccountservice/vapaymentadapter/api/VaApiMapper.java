@@ -23,7 +23,7 @@ public class VaApiMapper {
     public Sign mapSign(VaDetail va) {
         return Sign.builder()
                 .setHttpMethod(HttpMethod.POST.name())
-                .setEndpoint(dokuConfig.getApi().getEndpoint().get("va-create"))
+                .setEndpoint(dokuConfig.api().endpoint().get("va-create"))
                 .setToken(va.getToken())
                 .setDigest(digest.generate(mapper.writeValueAsString(va)))
                 .setTimestamp(Instant.now())

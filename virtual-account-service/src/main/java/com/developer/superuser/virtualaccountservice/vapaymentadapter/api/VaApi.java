@@ -22,7 +22,7 @@ public class VaApi {
         MultiValueMap<String, String> headerMap = Headers.multiValueMapHeader(va);
         return vaApiHelper.execute(() ->
                 dokuRestClient.post()
-                        .uri(dokuConfig.getApi().getEndpoint().get("va-create"))
+                        .uri(dokuConfig.api().endpoint().get("va-create"))
                         .headers(header -> header.addAll(headerMap))
                         .body(va)
                         .retrieve()

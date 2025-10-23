@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 public class RestClientConfig {
     @Bean
     public RestClient dokuRestClient(ObjectMapper mapper, DokuConfigProperties dokuConfig) {
-        return buildRestClient(mapper, dokuConfig.getApi().getBaseUrl(), "DokuRestClient");
+        return buildRestClient(mapper, dokuConfig.api().baseUrl(), "DokuRestClient");
     }
 
     private RestClient buildRestClient(ObjectMapper mapper, String baseUrl, String beanName) {
