@@ -21,13 +21,13 @@ public class TokenCacheServiceAdapter implements TokenCacheService {
             unless = "#result.error != null"
     )
     public Token getOrFetchTokenB2b(Token token) {
-        log.debug("Cache is not available for token b2b, then fetching from doku api");
+        log.debug("Cache b2b token is unavailable, hence fetching from doku api");
         return tokenApiService.fetchTokenB2b(token);
     }
 
     @Override
     @CacheEvict(value = TokenServiceConstant.CACHE_TOKEN_B2B, key = "#clientId")
     public void evictTokenB2b(String clientId) {
-        log.info("Evicting token b2b from cache for clientId --- {}", clientId);
+        log.info("Evict b2b token from cache with clientId --- {}", clientId);
     }
 }

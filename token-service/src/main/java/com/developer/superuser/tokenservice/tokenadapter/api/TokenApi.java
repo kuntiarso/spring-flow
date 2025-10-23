@@ -24,7 +24,7 @@ public class TokenApi {
         Map<String, Object> body = Map.of("grantType", token.getGrantType());
         return tokenApiHelper.execute(() ->
                 dokuRestClient.post()
-                        .uri(dokuConfig.getApi().getEndpoint().get("access-token"), TokenType.B2B.getValue())
+                        .uri(dokuConfig.api().endpoint().get("access-token"), TokenType.B2B.getValue())
                         .headers(header -> header.addAll(Headers.multiValueMapHeader(token)))
                         .body(body)
                         .retrieve()

@@ -17,7 +17,7 @@ public class TokenApiServiceAdapter implements TokenApiService {
     @Override
     public Token fetchTokenB2b(Token token) {
         Sign sign = basic.generate(tokenApiMapper.mapSign(token));
-        log.info("Printing basic sign result --- {}", sign);
+        log.info("Basic sign result --- {}", sign);
         token.setSignature(sign.getSignature());
         token.setTimestamp(sign.getTimestamp());
         return tokenApi.fetchTokenB2b(token);

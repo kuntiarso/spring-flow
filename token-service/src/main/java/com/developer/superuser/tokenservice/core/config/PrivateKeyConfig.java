@@ -21,13 +21,13 @@ public class PrivateKeyConfig {
     @Bean
     public PrivateKey merchantPrivateKey(DokuConfigProperties dokuConfig) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableEntryException {
         KeyStore keyStore = KeyStore.getInstance(TokenServiceConstant.KEY_FORMAT_PKCS12);
-        DokuConfigProperties.Merchant merchant = dokuConfig.getMerchant();
-        Resource resource = resourceLoader.getResource(merchant.getKeyStore().getLocation());
+        DokuConfigProperties.Merchant merchant = dokuConfig.merchant();
+        Resource resource = resourceLoader.getResource(merchant.keyStore().location());
         try (InputStream inputStream = resource.getInputStream()) {
-            keyStore.load(inputStream, merchant.getKeyStore().getPassword().toCharArray());
+            keyStore.load(inputStream, merchant.keyStore().password().toCharArray());
         }
-        KeyStore.PasswordProtection passwordProtection = new KeyStore.PasswordProtection(merchant.getPrivateKey().getPassphrase().toCharArray());
-        KeyStore.Entry entry = keyStore.getEntry(merchant.getKeyStore().getAlias(), passwordProtection);
+        KeyStore.PasswordProtection passwordProtection = new KeyStore.PasswordProtection(merchant.privateKey().passphrase().toCharArray());
+        KeyStore.Entry entry = keyStore.getEntry(merchant.keyStore().alias(), passwordProtection);
         if (entry instanceof KeyStore.PrivateKeyEntry) {
             return ((KeyStore.PrivateKeyEntry) entry).getPrivateKey();
         } else {

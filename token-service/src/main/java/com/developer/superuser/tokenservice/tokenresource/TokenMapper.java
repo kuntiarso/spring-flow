@@ -1,28 +1,29 @@
 package com.developer.superuser.tokenservice.tokenresource;
 
-import com.developer.superuser.shared.openapi.contract.TokenRequest;
-import com.developer.superuser.shared.openapi.contract.TokenResponse;
+import com.developer.superuser.shared.dto.springflow.TokenGetRequest;
+import com.developer.superuser.shared.dto.springflow.TokenGetResponse;
+import com.developer.superuser.tokenservice.core.property.DokuConfigProperties;
 import com.developer.superuser.tokenservice.token.Token;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class TokenMapper {
-    public Token mapCore(TokenRequest request) {
+    public Token mapCore(String clientId, TokenGetRequest request) {
         return Token.builder()
-                .setClientId(request.getClientId())
-                .setGrantType(request.getGrantType().getValue())
+                .setClientId(clientId)
+                .setGrantType(request.grantType().getValue())
                 .build();
     }
 
-    public TokenResponse mapResponse(Token token) {
-        return TokenResponse.builder()
-                .setTokenScheme(token.getTokenScheme())
-                .setAccessToken(token.getAccessToken())
-                .setAccessTokenExpiryTime(token.getAccessTokenExpiryTime())
-                .setRefreshToken(token.getRefreshToken())
-                .setRefreshTokenExpiryTime(token.getRefreshTokenExpiryTime())
-                .setExpiresIn(token.getExpiresIn())
-                .setAdditionalInfo(token.getAdditionalInfo())
+    public TokenGetResponse mapResponse(Token token) {
+        return TokenGetResponse.builder()
+                .withTokenScheme(token.getTokenScheme())
+                .withAccessToken(token.getAccessToken())
+                .withAccessTokenExpiryTime(token.getAccessTokenExpiryTime())
+                .withRefreshToken(token.getRefreshToken())
+                .withRefreshTokenExpiryTime(token.getRefreshTokenExpiryTime())
                 .build();
     }
 }

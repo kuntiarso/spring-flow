@@ -16,5 +16,5 @@ public class TokenServiceConstant {
     public final String HEADER_TIMESTAMP = "X-TIMESTAMP";
     public final String HEADER_CLIENT_KEY = "X-CLIENT-KEY";
 
-    public final String CACHE_TOKEN_B2B = "b2bTokens";
+    public final String CACHE_TOKEN_B2B = "b2bToken";
 }

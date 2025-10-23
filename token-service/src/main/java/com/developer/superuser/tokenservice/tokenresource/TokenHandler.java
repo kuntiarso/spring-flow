@@ -1,11 +1,11 @@
 package com.developer.superuser.tokenservice.tokenresource;
 
 import com.developer.superuser.shared.data.ResponseData;
-import com.developer.superuser.shared.openapi.contract.ErrorData;
-import com.developer.superuser.shared.openapi.contract.TokenRequest;
+import com.developer.superuser.shared.dto.springflow.TokenGetRequest;
 import com.developer.superuser.shared.openapi.contract.TokenType;
 import com.developer.superuser.shared.utility.Errors;
-import com.developer.superuser.tokenservice.core.helper.B2bTokens;
+import com.developer.superuser.tokenservice.core.helper.B2bToken;
+import com.developer.superuser.tokenservice.core.property.DokuConfigProperties;
 import com.developer.superuser.tokenservice.token.Token;
 import com.developer.superuser.tokenservice.token.TokenCacheService;
 import lombok.RequiredArgsConstructor;
@@ -19,38 +19,37 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class TokenHandler {
+    private final DokuConfigProperties dokuConfig;
     private final TokenCacheService tokenCacheService;
-    private final B2bTokens b2bTokens;
+    private final B2bToken b2bToken;
     private final TokenMapper tokenMapper;
 
-    public ResponseData<?> getToken(TokenRequest request) {
+    public ResponseData<?> getToken(TokenGetRequest request) {
+        String clientId = dokuConfig.merchant().clientId();
+        ResponseData<?> response;
         try {
-            Token token = null;
-            ErrorData error = null;
-            log.debug("Getting token based on tokenType");
-            if (TokenType.B2B.equals(request.getTokenType())) {
-                log.info("Getting b2b token");
-                b2bTokens.validate(request);
-                token = b2bTokens.execute(tokenMapper.mapCore(request));
-            } else if (TokenType.B2B2C.equals(request.getTokenType())) {
-                log.info("Getting b2b2c token");
-                error = Errors.error(HttpStatus.NOT_IMPLEMENTED.value());
+            log.info("Start to get token based on tokenType --- {}", request.tokenType());
+            Token token;
+            if (TokenType.B2B.equals(request.tokenType())) {
+                log.debug("Inside b2b token scope");
+                b2bToken.validate(request);
+                token = b2bToken.execute(tokenMapper.mapCore(clientId, request));
+            } else if (TokenType.B2B2C.equals(request.tokenType())) {
+                log.debug("Inside b2b2c token scope");
+                token = Token.builder().setError(Errors.error(HttpStatus.NOT_IMPLEMENTED.value())).build();
             } else {
-                log.error("Unknown token type --- {}", request.getTokenType());
-                error = Errors.badRequest("Unknown token type");
+                log.error("Unknown token type");
+                token = Token.builder().setError(Errors.badRequest("Unknown token type")).build();
             }
-            if (error != null) {
-                return ResponseData.error(error);
-            } else if (Objects.isNull(token)) {
-                return ResponseData.error(Errors.internalServerError("Receiving null token"));
-            } else if (Objects.nonNull(token.getError())) {
-                return ResponseData.error(token.getError());
-            }
-            return ResponseData.success(tokenMapper.mapResponse(token));
+            response = Objects.nonNull(token.getError())
+                    ? ResponseData.error(token.getError())
+                    : ResponseData.success(tokenMapper.mapResponse(token));
         } catch (Exception ex) {
-            log.error("Unknown error occurred while getting token", ex);
-            return ResponseData.error(Errors.internalServerError(ex.getLocalizedMessage()));
+            log.error("Unknown error occurred while getting token ::: ", ex);
+            response = ResponseData.error(Errors.internalServerError(ex.getLocalizedMessage()));
         }
+        if (!"200".equalsIgnoreCase(response.getCode())) tokenCacheService.evictTokenB2b(clientId);
+        return response;
     }
 
     public ResponseData<?> evictToken(String clientId) {
